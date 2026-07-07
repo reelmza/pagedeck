@@ -28,33 +28,40 @@ export default function Sidebar({
   return (
     // Mobile: full-width bar above the grid; md+: fixed left column.
     <aside className="flex flex-col border-b border-border bg-card md:col-span-2 md:h-dvh md:border-r md:border-b-0">
-      <div className="border-b border-border px-4 py-4">
-        <h1 className="text-sm font-semibold text-accent">
-          Office PDF Organizer
-        </h1>
-        <p className="mt-0.5 text-xs text-muted">Version {version}</p>
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/app-assets/PageDeck_Logo_NoBG.svg"
+          alt="PageDeck"
+          className="h-6 w-auto"
+        />
+        <p className="text-xs text-muted">Version {version}</p>
       </div>
 
-      {/* File list — height-capped on mobile so it never pushes the grid away */}
-      <div className="max-h-36 flex-1 overflow-y-auto p-2 md:max-h-none">
+      {/* File list — one horizontal touch-scroll row on mobile (scrollbar
+          hidden), vertical scrolling list on md+ */}
+      <div className="p-2 md:flex-1 md:overflow-y-auto">
         {files.length === 0 && !loading && (
-          <p className="px-2 py-4 text-xs text-muted">No files yet.</p>
+          <p className="px-2 py-2 text-xs text-muted md:py-4">No files yet.</p>
         )}
 
-        <ul className="space-y-1">
+        <ul className="scrollbar-hide flex gap-1.5 overflow-x-auto md:block md:space-y-1">
           {files.map((f) => (
             <li
               key={f.id}
-              className="group flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-accent-soft/50"
+              className="group flex shrink-0 items-center gap-2 rounded-md border border-border px-2 py-1.5 hover:bg-accent-soft/50 md:border-0"
             >
-              {/* Icon tinted with the file's color — legend for the grid outlines */}
+              {/* Icon tinted with the file's color — legend for the grid
+                  outlines. Fixed size, spans both text lines. */}
               <FileText
-                className="h-4 w-4 shrink-0"
+                className="h-7 w-7 shrink-0"
+                strokeWidth={1.5}
                 style={{ color: f.color }}
               />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-medium" title={f.name}>
-                  {f.name}
+                  {/* Hard cap long names so one file can't hog the row */}
+                  {f.name.length > 16 ? `${f.name.slice(0, 16)}…` : f.name}
                 </p>
                 <p className="text-[10px] text-muted">{f.pageCount} pages</p>
               </div>

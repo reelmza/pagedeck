@@ -34,6 +34,14 @@ body {
   color: var(--foreground);
 }
 
+/* Scrollable but no visible scrollbar (mobile file list — touch scroll) */
+@utility scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+}
+
 /* Soft fade used by the rotating tips on the loading screen */
 @keyframes fade-in {
   from {
