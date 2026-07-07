@@ -13,9 +13,15 @@ export default function Home() {
   return (
     // One-viewport page: hero = screen minus nav, the screenshot crops
     // at the bottom edge — nothing scrolls.
-    <main className="flex h-dvh flex-col overflow-hidden">
+    // bg-card = white: one uniform surface for nav + hero
+    <main className="relative isolate flex h-dvh flex-col overflow-hidden bg-card">
+      {/* Backdrop: accent glow under a fading dot grid — spans the whole
+          page, so it also shows through the transparent nav */}
+      <div aria-hidden className="hero-glow pointer-events-none absolute inset-0 -z-10" />
+      <div aria-hidden className="hero-dots pointer-events-none absolute inset-0 -z-10" />
+
       {/* ---------------- Nav ---------------- */}
-      <header className="relative shrink-0 border-b border-border bg-card">
+      <header className="relative shrink-0">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
           <Link href="/">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -83,7 +89,7 @@ export default function Home() {
 
         {/* Mobile dropdown menu */}
         {menuOpen && (
-          <nav className="flex flex-col gap-1 border-t border-border px-4 py-3 md:hidden">
+          <nav className="flex flex-col gap-1 border-t border-border bg-card px-4 py-3 md:hidden">
             <Link
               href="/"
               onClick={() => setMenuOpen(false)}

@@ -3,7 +3,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import PageThumbnail from "./PageThumbnail";
 import { softColor } from "@/lib/colors";
 import { getCachedThumb } from "@/lib/pdf";
@@ -23,6 +23,7 @@ type Props = {
   forceMount: boolean;
   onToggleSelect: (pageId: string, e: React.MouseEvent) => void;
   onClick: (pageId: string, e: React.MouseEvent) => void;
+  onRemove: (pageId: string) => void;
 };
 
 /**
@@ -73,6 +74,7 @@ function SortableCard({
   selectionActive,
   onToggleSelect,
   onClick,
+  onRemove,
 }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: page.id });
@@ -114,6 +116,21 @@ function SortableCard({
         }`}
       >
         {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+      </button>
+
+      {/* Remove page — visible on hover (md+) or always (mobile) */}
+      <button
+        type="button"
+        aria-label="Remove page"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove(page.id);
+        }}
+        // Stop dnd-kit's pointer sensor so pressing X never starts a drag
+        onPointerDown={(e) => e.stopPropagation()}
+        className="absolute right-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded border border-border bg-white text-muted transition-opacity hover:border-danger/40 hover:bg-danger/10 hover:text-danger md:opacity-0 md:group-hover:opacity-100"
+      >
+        <X className="h-3 w-3" />
       </button>
 
       <PageThumbnail fileId={page.fileId} pageIndex={page.pageIndex} />

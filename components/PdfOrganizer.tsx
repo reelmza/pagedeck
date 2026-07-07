@@ -174,6 +174,27 @@ export default function PdfOrganizer() {
     });
   }, []);
 
+  /** Remove a single page from the arrangement. If it was the file's last
+   *  page, drop the whole file too (frees its memory and sidebar entry). */
+  const removePage = useCallback(
+    (pageId: string) => {
+      const page = pages.find((p) => p.id === pageId);
+      if (!page) return;
+      const next = pages.filter((p) => p.id !== pageId);
+      setPages(next);
+      setSelected((prev) => {
+        if (!prev.has(pageId)) return prev;
+        const copy = new Set(prev);
+        copy.delete(pageId);
+        return copy;
+      });
+      if (!next.some((p) => p.fileId === page.fileId)) {
+        removeFile(page.fileId);
+      }
+    },
+    [pages, removeFile]
+  );
+
   /* ---------------- selection ---------------- */
 
   const toggleSelect = useCallback((pageId: string) => {
@@ -379,6 +400,7 @@ export default function PdfOrganizer() {
                 activeId={activeId}
                 onToggleSelect={toggleSelect}
                 onCardClick={handleCardClick}
+                onRemovePage={removePage}
               />
 
               {/* Faint ghost copy of the dragged card, following the mouse */}

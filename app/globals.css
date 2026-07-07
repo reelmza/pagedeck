@@ -42,6 +42,33 @@ body {
   }
 }
 
+/* Landing hero backdrop — faint dot grid, fading out away from the
+   heading, plus a soft accent glow behind it. Both use theme vars. */
+@utility hero-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--border) 65%, transparent) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 70% at 50% 15%,
+    black 35%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(
+    ellipse 90% 70% at 50% 15%,
+    black 35%,
+    transparent 80%
+  );
+}
+@utility hero-glow {
+  background: radial-gradient(
+    ellipse 55% 40% at 20% 85%,
+    color-mix(in srgb, var(--accent-soft) 75%, transparent),
+    transparent 70%
+  );
+}
+
 /* Soft fade used by the rotating tips on the loading screen */
 @keyframes fade-in {
   from {

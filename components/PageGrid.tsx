@@ -12,6 +12,7 @@ type Props = {
   activeId: string | null;
   onToggleSelect: (pageId: string, e: React.MouseEvent) => void;
   onCardClick: (pageId: string, e: React.MouseEvent) => void;
+  onRemovePage: (pageId: string) => void;
 };
 
 /** The sortable grid of page thumbnails — 2 columns on mobile, 4 on md+. */
@@ -22,6 +23,7 @@ export default function PageGrid({
   activeId,
   onToggleSelect,
   onCardClick,
+  onRemovePage,
 }: Props) {
   return (
     <SortableContext items={pages.map((p) => p.id)} strategy={rectSortingStrategy}>
@@ -38,6 +40,7 @@ export default function PageGrid({
             forceMount={page.id === activeId}
             onToggleSelect={onToggleSelect}
             onClick={onCardClick}
+            onRemove={onRemovePage}
           />
         ))}
       </div>
