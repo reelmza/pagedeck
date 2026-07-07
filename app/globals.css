@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
+/*
+ * App theme — light backgrounds with a bluish accent.
+ * Edit these variables to re-skin the whole app.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f8fc; /* page background */
+  --foreground: #1e293b; /* main text */
+  --accent: #2563eb; /* bluish accent (buttons, selection) */
+  --accent-soft: #dbeafe; /* light accent fill (hover, highlights) */
+  --muted: #64748b; /* secondary text */
+  --card: #ffffff; /* card / sidebar surfaces */
+  --border: #e2e8f0; /* hairline borders */
+  --danger: #dc2626; /* destructive actions (remove file) */
 }
 
+/* Expose the variables to Tailwind as color utilities
+   (bg-background, text-accent, text-muted, border-border, ...) */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Soft fade used by the rotating tips on the loading screen */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
