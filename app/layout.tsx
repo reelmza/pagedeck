@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://pagedeck.vercel.app"; // edit to the real domain
 const TITLE = "PageDeck - Organize and edit PDFs in your browser";
 const DESCRIPTION =
   "Reorder, edit and organize PDF pages right in your browser. " +
