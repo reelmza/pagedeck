@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     template: "%s | PageDeck", // sub-pages: "PDF Organizer | PageDeck"
   },
   description: DESCRIPTION,
+  // Google Search Console ownership proof (public by design).
+  verification: { google: "CTnBQe-klOMrIdJdEfLj3cCCJdW5mE0XQCUbgLX6ofw" },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
