@@ -246,6 +246,19 @@ export default function PdfOrganizer() {
     [pages, selected, lastSelectedId, toggleSelect, moveSelectionTo]
   );
 
+  // Warn before refresh/close once files are loaded — the arrangement
+  // lives only in memory and would be lost.
+  useEffect(() => {
+    if (files.length === 0) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      // Legacy browsers need returnValue set for the prompt to show.
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [files.length]);
+
   // Escape clears the current selection.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
