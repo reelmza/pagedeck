@@ -5,7 +5,8 @@ import {
   DndContext,
   DragOverlay,
   MeasuringStrategy,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   closestCenter,
   useSensor,
   useSensors,
@@ -28,6 +29,9 @@ import {
 } from "@/lib/pdf";
 import { nextFileColor, softColor } from "@/lib/colors";
 import type { PageRef, PdfFile } from "@/lib/types";
+
+/** Files larger than this are rejected on upload. */
+const MAX_FILE_MB = 180;
 
 /** Tips shown in random order on the loading screen. */
 const LOADING_TIPS = [
@@ -93,10 +97,12 @@ export default function PdfOrganizer() {
     return () => setThumbProgressListener(null);
   }, []);
 
-  // Require a small pointer movement before a drag starts,
-  // so plain clicks still work for selecting pages.
+  // Mouse: require a small movement before a drag starts, so plain clicks
+  // still select pages. Touch: require a short press, so swipes scroll the
+  // grid instead of dragging cards.
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } })
   );
 
   /* ---------------- files ---------------- */
@@ -105,6 +111,13 @@ export default function PdfOrganizer() {
     setError(null);
     setLoading(true);
     for (const file of Array.from(list)) {
+      if (file.size > MAX_FILE_MB * 1024 * 1024) {
+        setError(
+          `"${file.name}" is ${Math.round(file.size / 1024 / 1024)}MB — ` +
+            `the limit is ${MAX_FILE_MB}MB.`
+        );
+        continue;
+      }
       try {
         const id = crypto.randomUUID();
         const pageCount = await openPdf(id, file);
@@ -266,7 +279,9 @@ export default function PdfOrganizer() {
   const preloading = prepTotals.total > 0 && prepTotals.done < prepTotals.total;
 
   return (
-    <div className="grid h-screen grid-cols-12">
+    // Mobile: sidebar stacks on top of the grid (12/12); md+: 2/10 columns.
+    // dvh, not vh: tracks the real visible height under mobile browser bars.
+    <div className="flex h-dvh flex-col md:grid md:grid-cols-12">
       <Sidebar
         files={files}
         loading={loading}
@@ -278,7 +293,7 @@ export default function PdfOrganizer() {
       />
 
       <main
-        className="col-span-10 h-screen overflow-y-auto"
+        className="min-h-0 flex-1 overflow-y-auto md:col-span-10 md:h-dvh"
         // Allow dropping PDF files anywhere on the grid area.
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -287,7 +302,7 @@ export default function PdfOrganizer() {
         }}
       >
         {/* Status bar: page count + selection hint */}
-        <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/90 px-6 py-3 backdrop-blur">
+        <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-2.5 backdrop-blur md:px-6 md:py-3">
           <p className="shrink-0 text-xs text-muted">
             {pages.length} page{pages.length === 1 ? "" : "s"}
           </p>
@@ -299,7 +314,7 @@ export default function PdfOrganizer() {
           )}
         </div>
 
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           {loading || preloading ? (
             /* Blocking loader: shown from the moment a file is picked
                (parsing phase) until every preview is rendered, so all

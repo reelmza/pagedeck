@@ -14,7 +14,7 @@ type Props = {
   onCardClick: (pageId: string, e: React.MouseEvent) => void;
 };
 
-/** The 4-column sortable grid of page thumbnails. */
+/** The sortable grid of page thumbnails — 2 columns on mobile, 4 on md+. */
 export default function PageGrid({
   pages,
   fileMeta,
@@ -25,7 +25,7 @@ export default function PageGrid({
 }: Props) {
   return (
     <SortableContext items={pages.map((p) => p.id)} strategy={rectSortingStrategy}>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
         {pages.map((page, index) => (
           <PageCard
             key={page.id}

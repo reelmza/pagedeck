@@ -89,7 +89,8 @@ function SortableCard({
       {...listeners}
       onClick={(e) => onClick(page.id, e)}
       title={fileName}
-      className={`group relative cursor-grab rounded-lg border bg-card p-2 shadow-sm transition-shadow select-none hover:shadow-md ${
+      // touch-manipulation: no double-tap zoom delay; long-press starts a drag
+      className={`group relative cursor-grab touch-manipulation rounded-lg border bg-card p-1.5 shadow-sm transition-shadow select-none hover:shadow-md md:p-2 ${
         selected ? "ring-2 ring-accent/60" : ""
       } ${isDragging ? "opacity-30" : ""} ${
         selectionActive && !selected ? "hover:ring-2 hover:ring-accent/30" : ""
@@ -108,7 +109,8 @@ function SortableCard({
         className={`absolute left-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded border transition-opacity ${
           selected
             ? "border-accent bg-accent text-white opacity-100"
-            : "border-border bg-white opacity-0 group-hover:opacity-100"
+            : // Always visible on mobile (no hover on touch), hover-revealed on md+
+              "border-border bg-white md:opacity-0 md:group-hover:opacity-100"
         }`}
       >
         {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
@@ -139,7 +141,7 @@ function PlaceholderCard({
   return (
     <div
       style={{ borderColor: softColor(fileColor) }}
-      className={`rounded-lg border bg-card p-2 shadow-sm ${
+      className={`rounded-lg border bg-card p-1.5 shadow-sm md:p-2 ${
         selected ? "ring-2 ring-accent/60" : ""
       }`}
     >
