@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import { Download, FileText, Loader2, Plus, X } from "lucide-react";
 import type { PdfFile } from "@/lib/types";
+// Single source of truth for the app version — bump with `npm version`.
+import { version } from "@/package.json";
 
 type Props = {
   files: PdfFile[];
@@ -32,7 +34,7 @@ export default function Sidebar({
         <h1 className="text-sm font-semibold text-accent">
           Office PDF Organizer
         </h1>
-        <p className="mt-0.5 text-xs text-muted">Version 1.0.0</p>
+        <p className="mt-0.5 text-xs text-muted">Version {version}</p>
       </div>
 
       {/* File list */}
