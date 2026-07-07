@@ -7,9 +7,35 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://pagedeck.vercel.app"; // edit to the real domain
+const TITLE = "PageDeck - Organize and edit PDFs in your browser";
+const DESCRIPTION =
+  "Reorder, edit and organize PDF pages right in your browser. " +
+  "Your files never leave your device.";
+
 export const metadata: Metadata = {
-  title: "PDF Organizer",
-  description: "Offline, browser-based PDF page organizer",
+  // Base URL so file-based OG/Twitter images resolve to absolute URLs in prod.
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: "%s | PageDeck", // sub-pages: "PDF Organizer | PageDeck"
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "PageDeck",
+    type: "website",
+    // opengraph-image.png in app/ is picked up automatically —
+    // no need to list images here.
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    // Falls back to the opengraph-image automatically.
+  },
 };
 
 export default function RootLayout({
@@ -18,10 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
