@@ -183,7 +183,7 @@ export default function Home() {
           <div className="relative mx-auto hidden w-full max-w-4xl md:block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/app-assets/hero-pc-image.png"
+              src="/images/app-assets/hero-pc-image.webp"
               alt="PageDeck organizer on desktop"
               className="w-full rounded-xl border border-border shadow-xl"
             />
@@ -191,7 +191,7 @@ export default function Home() {
           {/* Mobile shot slides off the right edge for style */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/app-assets/hero-mobile-image.png"
+            src="/images/app-assets/hero-mobile-image.webp"
             alt="PageDeck organizer on mobile"
             className="ml-auto w-[90%] translate-x-6 rounded-l-xl border border-border shadow-xl md:hidden"
           />
