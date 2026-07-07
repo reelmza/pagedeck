@@ -49,17 +49,21 @@ export default function Sidebar({
           {files.map((f) => (
             <li
               key={f.id}
-              className="group flex shrink-0 items-center gap-2 rounded-md border border-border px-2 py-1.5 hover:bg-accent-soft/50 md:border-0"
+              className="group flex shrink-0 items-start gap-2 rounded-md border border-border px-2 py-1.5 hover:bg-accent-soft/50 md:border-0"
             >
               {/* Icon tinted with the file's color — legend for the grid
                   outlines. Fixed size, spans both text lines. */}
               <FileText
-                className="h-7 w-7 shrink-0"
+                className="shrink-0 mt-0.5"
+                size={20}
                 strokeWidth={1.5}
                 style={{ color: f.color }}
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium" title={f.name}>
+                <p
+                  className="truncate text-xs font-medium leading-none"
+                  title={f.name}
+                >
                   {/* Hard cap long names so one file can't hog the row */}
                   {f.name.length > 16 ? `${f.name.slice(0, 16)}…` : f.name}
                 </p>
