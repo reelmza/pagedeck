@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import { Download, FileText, Loader2, Plus, X } from "lucide-react";
 import type { PdfFile } from "@/lib/types";
 // Single source of truth for the app version — bump with `npm version`.
@@ -26,8 +25,6 @@ export default function Sidebar({
   onRemoveFile,
   onExport,
 }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   return (
     // Mobile: full-width bar above the grid; md+: fixed left column.
     <aside className="flex flex-col border-b border-border bg-card md:col-span-2 md:h-dvh md:border-r md:border-b-0">
@@ -84,24 +81,22 @@ export default function Sidebar({
 
       {/* Actions — side by side on mobile to save vertical space */}
       <div className="flex gap-2 border-t border-border p-3 md:flex-col">
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf,.pdf"
-          multiple
-          className="hidden"
-          onChange={(e) => {
-            if (e.target.files?.length) onAddFiles(e.target.files);
-            e.target.value = ""; // allow re-adding the same file
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-accent/30 bg-accent-soft/60 px-3 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent-soft"
-        >
+        {/* The invisible file input is stretched over the button face, so a
+            tap lands on the input itself — fully native on iOS, no label
+            forwarding or JS click involved. */}
+        <label className="relative flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-accent/30 bg-accent-soft/60 px-3 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent-soft">
+          <input
+            type="file"
+            accept="application/pdf,.pdf"
+            multiple
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            onChange={(e) => {
+              if (e.target.files?.length) onAddFiles(e.target.files);
+              e.target.value = ""; // allow re-adding the same file
+            }}
+          />
           <Plus className="h-3.5 w-3.5" /> Add File
-        </button>
+        </label>
         <button
           type="button"
           onClick={onExport}

@@ -33,6 +33,15 @@ import type { PageRef, PdfFile } from "@/lib/types";
 /** Files larger than this are rejected on upload. */
 const MAX_FILE_MB = 180;
 
+/** crypto.randomUUID only exists on HTTPS/localhost; fall back so the
+ *  app also works when opened over plain HTTP (e.g. phone via LAN IP). */
+function newFileId(): string {
+  return (
+    crypto.randomUUID?.() ??
+    `f-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
+}
+
 /** Tips shown in random order on the loading screen. */
 const LOADING_TIPS = [
   "Pre-loading files keep your experience smoother",
@@ -119,7 +128,7 @@ export default function PdfOrganizer() {
         continue;
       }
       try {
-        const id = crypto.randomUUID();
+        const id = newFileId();
         const pageCount = await openPdf(id, file);
         // Preload every page's thumbnail so later scrolling and dragging
         // only ever hit the cache.
@@ -140,8 +149,11 @@ export default function PdfOrganizer() {
             pageIndex: i,
           })),
         ]);
-      } catch {
-        setError(`Could not open "${file.name}" — is it a valid PDF?`);
+      } catch (err) {
+        // Show the real failure reason — a generic guess hides bugs.
+        console.error("openPdf failed", err);
+        const msg = err instanceof Error ? err.message : String(err);
+        setError(`Could not open "${file.name}": ${msg}`);
       }
     }
     setLoading(false);
