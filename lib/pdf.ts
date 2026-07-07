@@ -41,6 +41,10 @@ export async function openPdf(fileId: string, file: File): Promise<number> {
     // But no OffscreenCanvas in the worker: those are the persistent
     // GPU-backed surfaces that accumulated and made the browser flicker.
     isOffscreenCanvasSupported: false,
+    // Wasm decoders (JBIG2 / JPEG2000 / color profiles), served from
+    // public/. Without this, JBIG2 scans render as blank thumbnails.
+    // Copied from node_modules/pdfjs-dist/wasm — re-copy after upgrades.
+    wasmUrl: "/pdfjs/wasm/",
   }).promise;
   docs.set(fileId, doc);
   return doc.numPages;
