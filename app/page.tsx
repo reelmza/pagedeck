@@ -30,6 +30,24 @@ export default function Home() {
     // at the bottom edge — nothing scrolls.
     // bg-card = white: one uniform surface for nav + hero
     <main className="relative isolate flex h-dvh flex-col overflow-hidden bg-card">
+      {/* Hero image preloads — React hoists these into <head>, so the
+          download starts before the hero markup is even parsed. The media
+          queries make each device preload only its own image. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/images/app-assets/hero-pc-image.webp"
+        media="(min-width: 768px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/images/app-assets/hero-mobile-image.webp"
+        media="(max-width: 767px)"
+        fetchPriority="high"
+      />
+
       {/* Backdrop: accent glow under a fading dot grid — spans the whole
           page, so it also shows through the transparent nav */}
       <div
@@ -148,7 +166,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMenuOpen(false)}
-              className="mt-1 rounded-full bg-accent px-4 py-2 text-center text-sm font-medium text-white hover:bg-accent/90"
+              className="mt-1 flex items-center justify-center gap-2 rounded-full border bg-transparent px-4 py-2 text-sm font-normal text-accent transition-colors hover:bg-accent/90 hover:text-white"
             >
               <span>Leave a Tip</span>
               <PaystackIcon className="h-4 w-4" />
@@ -180,21 +198,24 @@ export default function Home() {
         <div className="mt-8 min-h-0 w-[calc(100%+3rem)] flex-1 overflow-hidden md:mt-10 md:w-full">
           {/* Desktop: central shot with the mobile screenshot overlaying
               its right side */}
-          <div className="relative mx-auto hidden w-full max-w-4xl md:block">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/app-assets/hero-pc-image.webp"
-              alt="PageDeck organizer on desktop"
-              className="w-full rounded-xl border border-border shadow-xl"
-            />
+          {/* One <picture>: the browser downloads only the matching source
+              (phones no longer fetch the desktop shot and vice versa).
+              Mobile slides off the right edge; md+ is centered. */}
+          <div className="relative mx-auto w-full md:max-w-4xl">
+            <picture>
+              <source
+                media="(min-width: 768px)"
+                srcSet="/images/app-assets/hero-pc-image.webp"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/app-assets/hero-mobile-image.webp"
+                alt="PageDeck organizer"
+                fetchPriority="high"
+                className="ml-auto w-[90%] translate-x-6 rounded-l-xl border border-border shadow-xl md:mx-auto md:w-full md:translate-x-0 md:rounded-xl"
+              />
+            </picture>
           </div>
-          {/* Mobile shot slides off the right edge for style */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/app-assets/hero-mobile-image.webp"
-            alt="PageDeck organizer on mobile"
-            className="ml-auto w-[90%] translate-x-6 rounded-l-xl border border-border shadow-xl md:hidden"
-          />
         </div>
       </section>
     </main>
