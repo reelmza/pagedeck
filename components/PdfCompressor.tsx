@@ -1,7 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Download, FilePlus2, FileText, Loader2, Plus, X } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Download,
+  FilePlus2,
+  FileText,
+  Loader2,
+  Plus,
+  X,
+} from "lucide-react";
 import {
   compressPdf,
   PRESETS,
@@ -221,11 +230,32 @@ export default function PdfCompressor() {
           if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
         }}
       >
-        {/* Status bar, matching the organizer's */}
+        {/* Status bar, matching the organizer's: back to home + file count */}
         <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-2.5 backdrop-blur md:px-6 md:py-3">
-          <p className="shrink-0 text-xs text-muted">
-            {jobs.length} file{jobs.length === 1 ? "" : "s"}
-          </p>
+          <div className="flex shrink-0 items-center gap-2">
+            {/* Client-side navigation skips the beforeunload prompt, so the
+                unsaved-work warning has to happen here. */}
+            <Link
+              href="/"
+              aria-label="Back to homepage"
+              onClick={(e) => {
+                if (
+                  jobs.length > 0 &&
+                  !window.confirm(
+                    "Leave the compressor? Compressed files that haven't been downloaded will be lost."
+                  )
+                ) {
+                  e.preventDefault();
+                }
+              }}
+              className="-ml-1 rounded-md p-1 text-muted transition-colors hover:bg-accent-soft/60 hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+            <p className="text-xs text-muted">
+              {jobs.length} file{jobs.length === 1 ? "" : "s"}
+            </p>
+          </div>
           {working && (
             <p className="rounded-full bg-accent-soft px-3 py-1 text-xs text-accent">
               Compressing — keep this tab open

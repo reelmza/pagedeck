@@ -14,7 +14,8 @@ import {
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { FilePlus2, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, FilePlus2, Loader2 } from "lucide-react";
 import Sidebar from "./Sidebar";
 import PageGrid from "./PageGrid";
 import PageThumbnail from "./PageThumbnail";
@@ -347,11 +348,32 @@ export default function PdfOrganizer() {
           if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
         }}
       >
-        {/* Status bar: page count + selection hint */}
+        {/* Status bar: back to home + page count + selection hint */}
         <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-2.5 backdrop-blur md:px-6 md:py-3">
-          <p className="shrink-0 text-xs text-muted">
-            {pages.length} page{pages.length === 1 ? "" : "s"}
-          </p>
+          <div className="flex shrink-0 items-center gap-2">
+            {/* Client-side navigation skips the beforeunload prompt, so the
+                unsaved-work warning has to happen here. */}
+            <Link
+              href="/"
+              aria-label="Back to homepage"
+              onClick={(e) => {
+                if (
+                  files.length > 0 &&
+                  !window.confirm(
+                    "Leave the organizer? Your files and arrangement will be lost."
+                  )
+                ) {
+                  e.preventDefault();
+                }
+              }}
+              className="-ml-1 rounded-md p-1 text-muted transition-colors hover:bg-accent-soft/60 hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+            <p className="text-xs text-muted">
+              {pages.length} page{pages.length === 1 ? "" : "s"}
+            </p>
+          </div>
           {selected.size > 0 && (
             <p className="rounded-full bg-accent-soft px-3 py-1 text-xs text-accent">
               {selected.size} selected — click a page to move the selection there, or
