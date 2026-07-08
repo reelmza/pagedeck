@@ -70,7 +70,7 @@ export default function Home() {
                 media="(min-width: 768px)"
                 srcSet="/images/app-assets/hero-pc-image.webp"
               />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+
               <img
                 src="/images/app-assets/hero-mobile-image.webp"
                 alt="PageDeck organizer"
