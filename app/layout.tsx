@@ -10,9 +10,9 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const TITLE = "PageDeck - Organize and edit PDFs in your browser";
+const TITLE = "PageDeck - Edit and compress PDFs in your browser";
 const DESCRIPTION =
-  "Reorder, edit and organize PDF pages right in your browser. " +
+  "Reorder, merge, organize and compress PDFs right in your browser. " +
   "Your files never leave your device.";
 
 export const metadata: Metadata = {
