@@ -75,9 +75,7 @@ export default function Nav() {
 
         {/* Donate pill — desktop only */}
         <Link
-          href="https://paystack.shop/pay/pagedeck"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/tip"
           className="hidden items-center gap-2 rounded-full border bg-transparent px-4 py-1.5 text-sm font-normal text-accent transition-colors hover:bg-accent/90 hover:text-white md:flex"
         >
           <span>Leave a Tip</span>
@@ -134,9 +132,7 @@ export default function Nav() {
             Support
           </Link>
           <Link
-            href="https://paystack.shop/pay/pagedeck"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/tip"
             onClick={() => setMenuOpen(false)}
             className="mt-1 flex items-center justify-center gap-2 rounded-full border bg-transparent px-4 py-2 text-sm font-normal text-accent transition-colors hover:bg-accent/90 hover:text-white"
           >
