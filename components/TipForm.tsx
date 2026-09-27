@@ -23,8 +23,9 @@ const naira = new Intl.NumberFormat("en-NG", {
 /** Loose email check — Paystack does the real validation. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// text-base (16px) on mobile — anything smaller makes iOS zoom in on focus
 const inputClass =
-  "w-full rounded-lg border border-border bg-card px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted/60 focus:border-accent focus:ring-2 focus:ring-accent-soft";
+  "w-full rounded-lg border border-border bg-card px-3.5 py-2.5 text-base text-foreground md:text-sm outline-none transition-colors placeholder:text-muted/60 focus:border-accent focus:ring-2 focus:ring-accent-soft";
 
 /** Where the form is in the payment flow. */
 type Status = "idle" | "paying" | "verifying";
@@ -159,7 +160,7 @@ export default function TipForm() {
         {/* Manual entry — only shown when "custom" is picked */}
         {isCustom && (
           <div className="relative mt-2">
-            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-muted">
+            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-muted md:text-sm">
               ₦
             </span>
             <input
