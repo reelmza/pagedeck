@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Lock } from "lucide-react";
+import { MERCHANT_NAME } from "@/lib/site";
 
 /** Preset tip amounts in Naira — shown in the dropdown. */
 const PRESET_AMOUNTS = [500, 1000, 2000, 5000, 10000];
@@ -193,6 +194,16 @@ export default function TipForm() {
               ? `Tip ${naira.format(amount)}`
               : "Leave a Tip"}
       </button>
+
+      {/* Paystack shows the account name, not PageDeck — say so up front */}
+      <p className="flex items-start justify-center gap-1.5 text-center text-xs text-muted">
+        <Lock className="mt-px h-3.5 w-3.5 shrink-0" />
+        <span>
+          Secure payment via Paystack. You&apos;ll be paying{" "}
+          <span className="font-medium text-foreground">{MERCHANT_NAME}</span>,
+          which will also appear on your bank statement.
+        </span>
+      </p>
     </form>
   );
 }

@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { CircleAlert, CircleCheck } from "lucide-react";
-import ReceiptDownload from "@/components/ReceiptDownload";
+import ReceiptCard from "@/components/ReceiptCard";
 import { getPaidTransaction } from "@/lib/paystack";
 import { CONTACT_EMAIL, type Receipt } from "@/lib/receipt";
 
 export const metadata = { title: "Thank You" };
 
 /** Landing spot after a tip — confirms the payment with Paystack
- *  (?reference=...) and offers a downloadable receipt. */
+ *  (?reference=...) and offers a shareable receipt image. */
 export default async function ThankYouPage({
   searchParams,
 }: {
@@ -42,7 +42,11 @@ export default async function ThankYouPage({
             Your support keeps PageDeck free, offline and ad-free for everyone.
           </p>
 
-          {receipt && <ReceiptSummary receipt={receipt} />}
+          {receipt && (
+            <div className="mt-2 w-full max-w-sm">
+              <ReceiptCard receipt={receipt} />
+            </div>
+          )}
         </>
       )}
 
@@ -53,46 +57,6 @@ export default async function ThankYouPage({
         Back to PageDeck
       </Link>
     </main>
-  );
-}
-
-const naira = new Intl.NumberFormat("en-NG", {
-  style: "currency",
-  currency: "NGN",
-});
-
-/** On-page summary of the payment plus the PDF download. */
-function ReceiptSummary({ receipt }: { receipt: Receipt }) {
-  const rows: [string, string][] = [
-    ["Name", receipt.name],
-    ["Email", receipt.email],
-    ["Date", receipt.paidAt],
-    ["Method", receipt.method],
-    ["Reference", receipt.reference],
-  ];
-
-  return (
-    <div className="mt-2 w-full max-w-sm space-y-5">
-      <div className="rounded-2xl border border-border bg-card p-5 text-left shadow-sm">
-        <p className="text-xs text-muted">Amount paid</p>
-        <p className="mt-0.5 text-2xl font-bold text-accent">
-          {receipt.currency === "NGN"
-            ? naira.format(receipt.amount)
-            : `${receipt.currency} ${receipt.amount.toLocaleString()}`}
-        </p>
-        <dl className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
-          {rows.map(([label, value]) => (
-            <div key={label} className="flex justify-between gap-4">
-              <dt className="shrink-0 text-muted">{label}</dt>
-              <dd className="min-w-0 truncate text-right font-medium text-foreground">
-                {value}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      <ReceiptDownload receipt={receipt} />
-    </div>
   );
 }
 
