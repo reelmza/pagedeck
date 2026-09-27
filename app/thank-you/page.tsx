@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { CircleAlert, CircleCheck } from "lucide-react";
-import ReceiptCard from "@/components/ReceiptCard";
+import TipImages from "@/components/TipImages";
 import { getPaidTransaction } from "@/lib/paystack";
 import { CONTACT_EMAIL, type Receipt } from "@/lib/receipt";
 
 export const metadata = { title: "Thank You" };
 
 /** Landing spot after a tip — confirms the payment with Paystack
- *  (?reference=...) and offers a shareable receipt image. */
+ *  (?reference=...) and offers a shareable receipt and supporter badge. */
 export default async function ThankYouPage({
   searchParams,
 }: {
@@ -38,13 +38,14 @@ export default async function ThankYouPage({
           <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
             Thank you for your tip
           </h1>
-          <p className="max-w-sm text-sm text-muted">
+          <p className="max-w-md text-sm text-muted">
             Your support keeps PageDeck free, offline and ad-free for everyone.
+            {receipt && " You can view your receipt or badge below."}
           </p>
 
           {receipt && (
             <div className="mt-2 w-full max-w-sm">
-              <ReceiptCard receipt={receipt} />
+              <TipImages receipt={receipt} />
             </div>
           )}
         </>

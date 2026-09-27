@@ -104,7 +104,7 @@ export default function TipForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="w-full space-y-5 rounded-2xl border border-border bg-card p-5 text-left shadow-sm md:p-6"
+      className="w-full space-y-5 text-left"
     >
       <div>
         <label htmlFor="tip-name" className="mb-1.5 block text-sm font-medium text-foreground">

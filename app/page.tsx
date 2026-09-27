@@ -43,18 +43,18 @@ export default function Home() {
       {/* ---------------- Hero ---------------- */}
       <section className="flex min-h-0 flex-1 flex-col items-center px-6 pt-10 text-center md:pt-14">
         <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-          Re-order and Edit PDFs from your browser.
+          Edit and compress PDFs from your browser.
         </h1>
         <p className="mt-3 max-w-md text-sm text-muted md:max-w-lg md:text-base">
-          Reorder, merge and organize PDF pages — right in your browser. Your
+          Reorder, merge, organize and compress PDFs — right in your browser. Your
           files never leave your device.
         </p>
 
         <Link
-          href="/pdf-organize"
+          href="/pdf-compress"
           className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-accent/90"
         >
-          Organize PDF Files <ArrowRight className="h-4 w-4" />
+          Compress PDF Files <ArrowRight className="h-4 w-4" />
         </Link>
 
         {/* Product screenshot — fills the space left under the CTA and is
