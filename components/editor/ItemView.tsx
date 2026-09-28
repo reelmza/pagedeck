@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { X } from "lucide-react";
-import { FONTS, LINE_HEIGHT } from "@/lib/editor/fonts";
+import { Loader2, X } from "lucide-react";
+import { fontCss, fontWeight, LINE_HEIGHT } from "@/lib/editor/fonts";
 import type { EditorItem, ItemPatch } from "@/lib/editor/types";
 
 /** Movement (screen px) before a press counts as a drag rather than a tap. */
@@ -181,7 +181,9 @@ export default function ItemView({
             editing ? "select-text outline-1 outline-dashed outline-accent" : "outline-none"
           }`}
           style={{
-            fontFamily: FONTS[item.font].css,
+            fontFamily: fontCss(item.font),
+            fontWeight: fontWeight(item.font, item.bold),
+            fontStyle: item.italic ? "italic" : "normal",
             lineHeight: LINE_HEIGHT,
             color: item.color,
             ...textSize(item.size * scale, editing),
@@ -193,6 +195,31 @@ export default function ItemView({
         // Faint dashed edge on screen only, so white boxes on white pages
         // can still be found — the saved PDF gets plain white
         <div className="h-full w-full bg-white outline outline-1 -outline-offset-1 outline-dashed outline-muted/30" />
+      )}
+
+      {item.kind === "patch" && (
+        <div className="relative h-full w-full">
+          {item.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={item.image.url} alt="Erased area" draggable={false} className="h-full w-full" />
+          ) : (
+            // Hatched until the fill is ready
+            <div
+              className="h-full w-full"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(45deg, rgb(37 99 235 / 0.16) 0 6px, transparent 6px 12px)",
+              }}
+            />
+          )}
+          {/* Screen-only edge so the box can be found again */}
+          <div className="pointer-events-none absolute inset-0 outline-1 -outline-offset-1 outline-dashed outline-accent/40" />
+          {item.busy && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/30">
+              <Loader2 className="h-4 w-4 animate-spin text-accent" />
+            </div>
+          )}
+        </div>
       )}
 
       {item.kind === "image" && (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Dancing_Script } from "next/font/google";
 import PdfEditor from "@/components/editor/PdfEditor";
+import { EDITOR_FONT_FAMILIES, EDITOR_FONT_PREVIEWS } from "./fonts";
 
 export const metadata: Metadata = {
   title: "PDF Editor",
@@ -9,9 +9,6 @@ export const metadata: Metadata = {
     "your browser. Your files never leave your device.",
 };
 
-// Handwriting font for typed signatures — only fetched once it's used
-const signatureFont = Dancing_Script({ subsets: ["latin"], weight: "600", preload: false });
-
 export default function PdfEditPage() {
-  return <PdfEditor handwritingFont={signatureFont.style.fontFamily} />;
+  return <PdfEditor fontFamilies={EDITOR_FONT_FAMILIES} fontPreviews={EDITOR_FONT_PREVIEWS} />;
 }
