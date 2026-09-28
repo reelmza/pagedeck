@@ -57,13 +57,12 @@ export default function Nav() {
             PDF Compressor
           </Link>
 
-          {/* Not built yet — hover reveals a tooltip instead of navigating */}
-          <span className="group relative cursor-default text-sm text-muted">
+          <Link
+            href="/pdf-edit"
+            className="text-sm text-muted transition-colors hover:text-foreground"
+          >
             PDF Editor
-            <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-              Coming soon
-            </span>
-          </span>
+          </Link>
 
           <Link
             href="/support"
@@ -117,13 +116,13 @@ export default function Nav() {
           >
             PDF Compressor
           </Link>
-          {/* No hover on touch — a small badge marks it as unreleased */}
-          <span className="flex items-center gap-2 rounded-md px-2 py-2 text-sm text-muted/70">
+          <Link
+            href="/pdf-edit"
+            onClick={() => setMenuOpen(false)}
+            className="rounded-md px-2 py-2 text-sm text-muted hover:bg-accent-soft/60 hover:text-foreground"
+          >
             PDF Editor
-            <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] text-accent">
-              Coming soon
-            </span>
-          </span>
+          </Link>
           <Link
             href="/support"
             onClick={() => setMenuOpen(false)}
