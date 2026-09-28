@@ -250,6 +250,14 @@ function groupRuns(
     const vx = -uy;
     const vy = ux;
 
+    // pdf.js bridges wide gaps (table columns, tab stops) with whitespace
+    // items as wide as the gap — a real space is ~0.3em, so a wide one
+    // means separate columns: end the line there instead of joining them
+    if (!item.str.trim() && item.width > 0.6 * size) {
+      cur = null;
+      continue;
+    }
+
     if (item.str) {
       const along = cur ? (e - cur.ox) * cur.ux + (f - cur.oy) * cur.uy : 0;
       const across = cur ? (e - cur.ox) * cur.vx + (f - cur.oy) * cur.vy : 0;
