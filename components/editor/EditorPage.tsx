@@ -54,7 +54,9 @@ function EditorPage({
   const ref = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
   const [src, setSrc] = useState<string | null>(null);
-  const [runs, setRuns] = useState<TextRun[]>([]);
+  // null until looked up — so "no text on this page" can be told apart
+  // from "still looking"
+  const [runs, setRuns] = useState<TextRun[] | null>(null);
   const scale = cssWidth / info.width;
 
   // Near the screen? (drives rendering) and how much is visible? (tells
@@ -92,7 +94,9 @@ function EditorPage({
   useEffect(() => {
     if (!near || !editingText) return;
     let live = true;
-    getTextRuns(index).then((r) => live && setRuns(r));
+    getTextRuns(index)
+      .then((r) => live && setRuns(r))
+      .catch(() => {}); // logged in getTextRuns; retried on the next look
     return () => {
       live = false;
     };
@@ -163,9 +167,18 @@ function EditorPage({
             />
           ))}
 
+          {/* Scans and photos have no real text to find — say so instead of
+              silently showing nothing */}
+          {editingText && runs?.length === 0 && (
+            <p className="pointer-events-none absolute inset-x-3 top-3 rounded-lg bg-foreground/85 px-3 py-2 text-center text-xs text-white">
+              No editable text on this page — it&apos;s probably a scan or photo. Use Smart erase, then
+              Add text.
+            </p>
+          )}
+
           {/* Tappable lines of existing text */}
           {editingText &&
-            runs
+            (runs ?? [])
               .filter((run) => !replaced.has(run.id))
               .map((run) => (
                 <button

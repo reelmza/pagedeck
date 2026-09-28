@@ -190,7 +190,12 @@ export function getTextRuns(index: number): Promise<TextRun[]> {
         const [vx, vy] = viewport.convertToViewportPoint(x, y) as [number, number];
         return { x: vx, y: vy };
       });
-    })().catch(() => []);
+    })().catch((err) => {
+      // Don't cache a failure as "no text" — let the next look retry
+      console.error("getTextRuns failed", err);
+      runsCache.delete(index);
+      throw err;
+    });
     runsCache.set(index, hit);
   }
   return hit;
