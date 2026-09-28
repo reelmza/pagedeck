@@ -185,7 +185,7 @@ export function getTextRuns(index: number): Promise<TextRun[]> {
     hit = (async () => {
       const page = await current.getPage(index + 1);
       const viewport = page.getViewport({ scale: 1 });
-      const content = await page.getTextContent();
+      const content = await readTextContent(page);
       return groupRuns(content, index, (x, y) => {
         const [vx, vy] = viewport.convertToViewportPoint(x, y) as [number, number];
         return { x: vx, y: vy };
@@ -199,6 +199,24 @@ export function getTextRuns(index: number): Promise<TextRun[]> {
     runsCache.set(index, hit);
   }
   return hit;
+}
+
+/** Same result as pdf.js's page.getTextContent(), but reading its stream
+ *  with a plain reader loop. getTextContent() uses `for await` over a
+ *  ReadableStream, which WebKit (Safari — and every iPhone browser,
+ *  Chrome included) can't iterate, so it threw there and no text was
+ *  found. */
+async function readTextContent(page: PDFPageProxy): Promise<TextContent> {
+  const reader = (page.streamTextContent() as ReadableStream<TextContent>).getReader();
+  const content: TextContent = { items: [], styles: Object.create(null), lang: null };
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    content.lang ??= value.lang;
+    Object.assign(content.styles, value.styles);
+    content.items.push(...value.items);
+  }
+  return content;
 }
 
 /** Joins pdf.js's text fragments into whole lines: same direction, same

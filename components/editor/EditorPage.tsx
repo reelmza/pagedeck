@@ -57,6 +57,9 @@ function EditorPage({
   // null until looked up — so "no text on this page" can be told apart
   // from "still looking"
   const [runs, setRuns] = useState<TextRun[] | null>(null);
+  // Shown on the page if the text lookup fails — phones have no easy
+  // console, so this is how a failure gets reported
+  const [runsError, setRunsError] = useState<string | null>(null);
   const scale = cssWidth / info.width;
 
   // Near the screen? (drives rendering) and how much is visible? (tells
@@ -95,8 +98,15 @@ function EditorPage({
     if (!near || !editingText) return;
     let live = true;
     getTextRuns(index)
-      .then((r) => live && setRuns(r))
-      .catch(() => {}); // logged in getTextRuns; retried on the next look
+      .then((r) => {
+        if (!live) return;
+        setRuns(r);
+        setRunsError(null);
+      })
+      .catch((err) => {
+        // Also logged in getTextRuns; retried on the next look
+        if (live) setRunsError(err instanceof Error ? `${err.name}: ${err.message}` : String(err));
+      });
     return () => {
       live = false;
     };
@@ -166,6 +176,14 @@ function EditorPage({
               onEndEdit={handlers.onEndEdit}
             />
           ))}
+
+          {/* Status of the text lookup, so it's never silently blank:
+              still looking, or failed (with the reason) */}
+          {editingText && near && runs === null && (
+            <p className="pointer-events-none absolute inset-x-3 top-3 rounded-lg bg-foreground/85 px-3 py-2 text-center text-xs text-white">
+              {runsError ? `Couldn't read this page's text — ${runsError}` : "Finding text on this page…"}
+            </p>
+          )}
 
           {/* Scans and photos have no real text to find — say so instead of
               silently showing nothing */}
