@@ -349,7 +349,7 @@ export default function PdfOrganizer() {
         }}
       >
         {/* Status bar: back to home + page count + selection hint */}
-        <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-2.5 backdrop-blur md:px-6 md:py-3">
+        <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background px-4 py-2.5 md:px-6 md:py-3">
           <div className="flex shrink-0 items-center gap-2">
             {/* Client-side navigation skips the beforeunload prompt, so the
                 unsaved-work warning has to happen here. */}
