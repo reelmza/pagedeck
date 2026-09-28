@@ -59,12 +59,17 @@ export default function ItemView({
   } | null>(null);
 
   // Text lives in the DOM while typing (contentEditable); only sync it from
-  // state when not editing, so React never fights the caret.
+  // state when not editing, so React never fights the caret. The first
+  // sync always happens — replacement boxes for existing text are created
+  // already in edit mode and must start with the original words.
+  const textSynced = useRef(false);
   useLayoutEffect(() => {
     const el = textRef.current;
-    if (item.kind === "text" && el && !editing && el.innerText !== item.text) {
+    if (item.kind !== "text" || !el) return;
+    if ((!editing || !textSynced.current) && el.innerText !== item.text) {
       el.textContent = item.text;
     }
+    textSynced.current = true;
   }, [item, editing]);
 
   // Entering edit mode: focus and put the caret at the end
